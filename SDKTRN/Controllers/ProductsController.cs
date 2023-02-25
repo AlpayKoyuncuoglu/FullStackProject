@@ -10,7 +10,7 @@ namespace SDKTRN.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-   
+
         private readonly SocialContext _context;
         public ProductsController(SocialContext context)
         {
@@ -31,6 +31,7 @@ namespace SDKTRN.Controllers
             if (p == null)
 
             {
+
                 return NotFound();
             }
             else
@@ -42,10 +43,36 @@ namespace SDKTRN.Controllers
         {
             _context.Products.Add(entity);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetProduct),new { id=entity.ProductId},entity );
+            return CreatedAtAction(nameof(GetProduct), new { id = entity.ProductId }, entity);
             //return Ok();
         }
 
-    
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateProduct(int id, Product entity)
+        {
+            if (id != entity.ProductId)
+            {
+                return BadRequest();
+            }
+
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            product.Name = entity.Name;
+            product.Price = entity.Price;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
     }
 }
