@@ -45,5 +45,16 @@ namespace SDKTRN.Controllers
             else
                 return Ok(p);
         }
+
+        [HttpPost]
+        public IActionResult CreateProduct(Product p)
+        {
+            _products.Add(p);
+            foreach (var item in _products)
+            {
+                Console.WriteLine(item.Name);
+            }
+            return Ok(p);
+        }
     }
 }
